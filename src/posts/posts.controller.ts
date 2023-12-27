@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   NotFoundException,
@@ -39,6 +40,12 @@ const posts: PostModel[] = [
   },
 ];
 
+interface CreatePostDto {
+  title: string;
+  author: string;
+  content: string;
+}
+
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
@@ -59,5 +66,15 @@ export class PostsController {
   }
 
   @Post()
-  createPost(): PostModel | void {}
+  createPost(@Body() createPostDto: CreatePostDto): PostModel {
+    const newPost: PostModel = {
+      id: posts.length + 1,
+      ...createPostDto,
+      likeCount: 0,
+      commentCount: 0,
+    };
+
+    posts.push(newPost);
+    return newPost;
+  }
 }
