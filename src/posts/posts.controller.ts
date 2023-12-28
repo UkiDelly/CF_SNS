@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
@@ -16,7 +18,7 @@ interface PostModel {
   commentCount: number;
 }
 
-const posts: PostModel[] = [
+let posts: PostModel[] = [
   {
     id: 1,
     author: 'John Doe',
@@ -41,20 +43,33 @@ const posts: PostModel[] = [
 ];
 
 interface CreatePostDto {
-  title: string;
   author: string;
   content: string;
+}
+
+interface UpdatePostDto {
+  author?: string;
+  content?: string;
 }
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
+  /**
+   * 모든 Post를 조회하는 API
+   */
   @Get()
   getPosts(): PostModel[] {
     return posts;
   }
 
+  /**
+   * 특정 게시물을 가져옵니다.
+   * @param id 게시물의 ID
+   * @returns 해당 ID에 해당하는 게시물 객체
+   * @throws NotFoundException 해당 ID에 해당하는 게시물이 없을 경우 발생합니다.
+   */
   @Get(':id')
   getPost(@Param('id') id: string): PostModel {
     const post = posts.find((post) => post.id === +id);
@@ -76,5 +91,37 @@ export class PostsController {
 
     posts.push(newPost);
     return newPost;
+  }
+
+  @Patch(':id')
+  updatePost(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
+    const post = posts.find((post) => post.id === +id);
+    if (!post) {
+      throw new NotFoundException("The post doesn't exist");
+    }
+
+    const updatedPost: PostModel = {
+      id: post.id,
+      author: updatePostDto.author || post.author,
+      content: updatePostDto.content || post.content,
+      likeCount: post.likeCount,
+      commentCount: post.commentCount,
+    };
+
+    posts[+id - 1] = updatedPost;
+    return updatedPost;
+  }
+
+  @Delete(':id')
+  deletePost(@Param('id') id: string) {
+    const post = posts.find((post) => post.id === +id);
+
+    if (!post) {
+      throw new NotFoundException("The post doesn't exist");
+    }
+
+    posts = posts.filter((posts) => posts.id !== +id);
+
+    return id;
   }
 }
