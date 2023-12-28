@@ -3,54 +3,16 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Patch,
   Post,
 } from '@nestjs/common';
-import { PostsService } from './posts.service';
-
-interface PostModel {
-  id: number;
-  author: string;
-  content: string;
-  likeCount: number;
-  commentCount: number;
-}
-
-let posts: PostModel[] = [
-  {
-    id: 1,
-    author: 'John Doe',
-    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    likeCount: 0,
-    commentCount: 0,
-  },
-  {
-    id: 2,
-    author: 'Jane Smith',
-    content: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem.',
-    likeCount: 5,
-    commentCount: 2,
-  },
-  {
-    id: 3,
-    author: 'Alice Johnson',
-    content: 'At vero eos et accusamus et iusto odio dignissimos ducimus.',
-    likeCount: 10,
-    commentCount: 3,
-  },
-];
-
-interface CreatePostDto {
-  author: string;
-  content: string;
-}
-
-interface UpdatePostDto {
-  author?: string;
-  content?: string;
-}
+import {
+  CreatePostDto,
+  PostModel,
+  PostsService,
+  UpdatePostDto,
+} from './posts.service';
 
 @Controller('posts')
 export class PostsController {
@@ -61,7 +23,7 @@ export class PostsController {
    */
   @Get()
   getPosts(): PostModel[] {
-    return posts;
+    return this.postsService.getPosts();
   }
 
   /**
@@ -72,56 +34,21 @@ export class PostsController {
    */
   @Get(':id')
   getPost(@Param('id') id: string): PostModel {
-    const post = posts.find((post) => post.id === +id);
-    if (!post) {
-      throw new NotFoundException("The post doesn't exist");
-    }
-
-    return post;
+    return this.postsService.getPost(+id);
   }
 
   @Post()
   createPost(@Body() createPostDto: CreatePostDto): PostModel {
-    const newPost: PostModel = {
-      id: posts.length + 1,
-      ...createPostDto,
-      likeCount: 0,
-      commentCount: 0,
-    };
-
-    posts.push(newPost);
-    return newPost;
+    return this.postsService.createPost(createPostDto);
   }
 
   @Patch(':id')
   updatePost(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    const post = posts.find((post) => post.id === +id);
-    if (!post) {
-      throw new NotFoundException("The post doesn't exist");
-    }
-
-    const updatedPost: PostModel = {
-      id: post.id,
-      author: updatePostDto.author || post.author,
-      content: updatePostDto.content || post.content,
-      likeCount: post.likeCount,
-      commentCount: post.commentCount,
-    };
-
-    posts[+id - 1] = updatedPost;
-    return updatedPost;
+    return this.postsService.updatePost(+id, updatePostDto);
   }
 
   @Delete(':id')
   deletePost(@Param('id') id: string) {
-    const post = posts.find((post) => post.id === +id);
-
-    if (!post) {
-      throw new NotFoundException("The post doesn't exist");
-    }
-
-    posts = posts.filter((posts) => posts.id !== +id);
-
-    return id;
+    return this.postsService.deletePost(+id);
   }
 }
