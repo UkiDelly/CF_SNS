@@ -2,11 +2,13 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { PostModel } from './posts/entities/posts.entity';
 import { PostsModule } from './posts/posts.module';
 
 @Module({
   imports: [
     PostsModule,
+    // TypeORM은 사용하귀 위해서는 TypeOrmModule.forRoot()를 사용
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -15,7 +17,7 @@ import { PostsModule } from './posts/posts.module';
       password: 'postgres',
       database: 'nestjs_tutorial',
       synchronize: true,
-      entities: [],
+      entities: [PostModel],
     }),
   ],
   controllers: [AppController],

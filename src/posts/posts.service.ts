@@ -1,14 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { PostModel } from './entities/posts.entity';
 
-export { CreatePostDto, PostModel, UpdatePostDto };
-
-interface PostModel {
-  id: number;
-  author: string;
-  content: string;
-  likeCount: number;
-  commentCount: number;
-}
+export { CreatePostDto, UpdatePostDto };
 
 interface CreatePostDto {
   author: string;
@@ -22,30 +17,14 @@ interface UpdatePostDto {
 
 @Injectable()
 export class PostsService {
-  private posts: PostModel[] = [
-    {
-      id: 1,
-      author: 'John Doe',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      likeCount: 0,
-      commentCount: 0,
-    },
-    {
-      id: 2,
-      author: 'Jane Smith',
-      content:
-        'Sed ut perspiciatis unde omnis iste natus error sit voluptatem.',
-      likeCount: 5,
-      commentCount: 2,
-    },
-    {
-      id: 3,
-      author: 'Alice Johnson',
-      content: 'At vero eos et accusamus et iusto odio dignissimos ducimus.',
-      likeCount: 10,
-      commentCount: 3,
-    },
-  ];
+
+  constructor(
+
+    // NestJS에서 자동으로 생성한 Repository를 주입할때는 @InjectRepository()도 사용해야한다.
+    @InjectRepository(PostModel)
+    private readonly postRepository: Repository<PostModel>) {}
+
+  private posts: PostModel[] = [];
 
   getPosts(): PostModel[] {
     return this.posts;
