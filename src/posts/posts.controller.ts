@@ -18,8 +18,8 @@ export class PostsController {
    * 모든 Post를 조회하는 API
    */
   @Get()
-  getPosts(): PostModel[] {
-    return this.postsService.getPosts();
+  async getPosts() {
+    return await this.postsService.getPosts();
   }
 
   /**
@@ -29,8 +29,8 @@ export class PostsController {
    * @throws NotFoundException 해당 ID에 해당하는 게시물이 없을 경우 발생합니다.
    */
   @Get(':id')
-  getPost(@Param('id') id: string): PostModel {
-    return this.postsService.getPost(+id);
+  async getPost(@Param('id') id: string) {
+    return await this.postsService.getPost(+id);
   }
 
   @Post()

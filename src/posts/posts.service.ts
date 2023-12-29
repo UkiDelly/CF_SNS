@@ -19,19 +19,19 @@ interface UpdatePostDto {
 export class PostsService {
 
   constructor(
-
     // NestJS에서 자동으로 생성한 Repository를 주입할때는 @InjectRepository()도 사용해야한다.
     @InjectRepository(PostModel)
     private readonly postRepository: Repository<PostModel>) {}
 
   private posts: PostModel[] = [];
 
-  getPosts(): PostModel[] {
-    return this.posts;
+
+  async getPosts() {
+    return await this.postRepository.find({ take: 10 });
   }
 
-  getPost(id: number): PostModel {
-    const post = this.posts.find((post) => post.id === id);
+  async getPost(id: number): Promise<PostModel> {
+    const post = await this.postRepository.findOne({ where: { id } });
     if (!post) {
       throw new NotFoundException("The post doesn't exist");
     }
