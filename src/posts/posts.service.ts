@@ -44,12 +44,14 @@ export class PostsService {
     const post = this.postRepository.create(createPostDto);
 
     // 생성한 PostModel 객체를 저장한다.
+    // .save()함수는 객체가 존재하면 업데이트를 하고, 존재하지 않으면 새로운 객체를 생성한다.
     const newPost = await this.postRepository.save(post);
     return newPost;
   }
 
-  updatePost(id: number, updatePostDto: UpdatePostDto) {
-    const post = this.posts.find((post) => post.id === id);
+  async updatePost(id: number, updatePostDto: UpdatePostDto) {
+    const post = await this.postRepository.findOne({ where: { id } });
+
     if (!post) {
       throw new NotFoundException("The post doesn't exist");
     }
@@ -60,9 +62,9 @@ export class PostsService {
       content: updatePostDto.content || post.content,
       likeCount: post.likeCount,
       commentCount: post.commentCount,
-    };
+    }
 
-    this.posts[id - 1] = updatedPost;
+    await this.postRepository.update(updatedPost.id, updatedPost);
     return updatedPost;
   }
 

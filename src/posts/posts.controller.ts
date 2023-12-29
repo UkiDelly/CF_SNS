@@ -38,7 +38,7 @@ export class PostsController {
   }
 
   @Patch(':id')
-  updatePost(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
+  async updatePost(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postsService.updatePost(+id, updatePostDto);
   }
 
