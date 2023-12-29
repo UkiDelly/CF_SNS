@@ -39,11 +39,11 @@ export class PostsController {
 
   @Patch(':id')
   async updatePost(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postsService.updatePost(+id, updatePostDto);
+    return await this.postsService.updatePost(+id, updatePostDto);
   }
 
   @Delete(':id')
-  deletePost(@Param('id') id: string) {
-    return this.postsService.deletePost(+id);
+  async deletePost(@Param('id') id: string) {
+    return await this.postsService.deletePost(+id);
   }
 }
