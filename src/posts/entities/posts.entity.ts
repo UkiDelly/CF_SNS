@@ -11,15 +11,14 @@ class PostModel {
   @Column()
   content: string;
 
-  @Column({ name: 'like_count' })
+  @Column({ name: 'like_count', default: 0 })
   likeCount: number;
 
-  @Column({ name: 'comment_count' })
+  @Column({ name: 'comment_count', default: 0 })
   commentCount: number;
 }
 
 export { PostModel };
-
 
 
 

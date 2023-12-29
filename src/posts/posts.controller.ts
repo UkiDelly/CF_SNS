@@ -7,7 +7,6 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { PostModel } from './entities/posts.entity';
 import { CreatePostDto, PostsService, UpdatePostDto } from './posts.service';
 
 @Controller('posts')
@@ -34,8 +33,8 @@ export class PostsController {
   }
 
   @Post()
-  createPost(@Body() createPostDto: CreatePostDto): PostModel {
-    return this.postsService.createPost(createPostDto);
+  async createPost(@Body() createPostDto: CreatePostDto) {
+    return await this.postsService.createPost(createPostDto);
   }
 
   @Patch(':id')

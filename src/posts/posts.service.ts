@@ -39,15 +39,12 @@ export class PostsService {
     return post;
   }
 
-  createPost(createPostDto: CreatePostDto): PostModel {
-    const newPost: PostModel = {
-      id: this.posts.length + 1,
-      ...createPostDto,
-      likeCount: 0,
-      commentCount: 0,
-    };
+  async createPost(createPostDto: CreatePostDto) {
+    // 새로운 PostModel 객체를 생성한다,
+    const post = this.postRepository.create(createPostDto);
 
-    this.posts.push(newPost);
+    // 생성한 PostModel 객체를 저장한다.
+    const newPost = await this.postRepository.save(post);
     return newPost;
   }
 
