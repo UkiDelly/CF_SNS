@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PostModel } from './posts/entities/posts.entity';
 import { PostsModule } from './posts/posts.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { PostsModule } from './posts/posts.module';
       synchronize: true,
       entities: [PostModel],
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
