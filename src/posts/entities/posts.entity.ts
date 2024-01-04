@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'posts' })
-class PostModel {
+export class PostEntity {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
@@ -18,7 +18,6 @@ class PostModel {
   commentCount: number;
 }
 
-export { PostModel };
 
 
 

@@ -2,8 +2,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PostModel } from './posts/entities/posts.entity';
+import { PostEntity } from './posts/entities/posts.entity';
 import { PostsModule } from './posts/posts.module';
+import { UserEntity } from './users/entity/user.entity';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -18,7 +19,7 @@ import { UsersModule } from './users/users.module';
       password: 'postgres',
       database: 'nestjs_tutorial',
       synchronize: true,
-      entities: [PostModel],
+      entities: [PostEntity, UserEntity],
     }),
     UsersModule,
   ],

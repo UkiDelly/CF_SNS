@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-enum Role { ADMIN = 'admin', USER = 'user' }
+export enum Role { ADMIN = 'admin', USER = 'user' }
 
 
 @Entity({ name: 'users' })
@@ -8,10 +8,10 @@ export class UserEntity {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'varchar', length: 20, unique: true })
   nickname: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, unique: true })
   email: string;
 
   @Column({ type: 'varchar', length: 255 })
