@@ -1,12 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { UserEntity } from 'src/users/entity/user.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'posts' })
 export class PostEntity {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
-  @Column({ length: 100 })
-  author: string;
+  @ManyToOne(ref => UserEntity, user => user.posts, { nullable: false, onDelete: 'CASCADE' })
+  author: UserEntity;
 
   @Column()
   content: string;
