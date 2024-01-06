@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { PostModel } from './entities/posts.entity';
+import { PostEntity } from './entities/posts.entity';
 
 export { CreatePostDto, UpdatePostDto };
 
@@ -20,17 +20,17 @@ export class PostsService {
 
   constructor(
     // NestJS에서 자동으로 생성한 Repository를 주입할때는 @InjectRepository()도 사용해야한다.
-    @InjectRepository(PostModel)
-    private readonly postRepository: Repository<PostModel>) {}
+    @InjectRepository(PostEntity)
+    private readonly postRepository: Repository<PostEntity>) {}
 
-  private posts: PostModel[] = [];
+  private posts: PostEntity[] = [];
 
 
   async getPosts() {
     return await this.postRepository.find({ take: 10 });
   }
 
-  async getPost(id: number): Promise<PostModel> {
+  async getPost(id: number): Promise<PostEntity> {
     const post = await this.postRepository.findOne({ where: { id } });
     if (!post) {
       throw new NotFoundException("The post doesn't exist");
@@ -40,10 +40,10 @@ export class PostsService {
   }
 
   async createPost(createPostDto: CreatePostDto) {
-    // 새로운 PostModel 객체를 생성한다,
+    // 새로운 PostEntity 객체를 생성한다,
     const post = this.postRepository.create(createPostDto);
 
-    // 생성한 PostModel 객체를 저장한다.
+    // 생성한 PostEntity 객체를 저장한다.
     // .save()함수는 객체가 존재하면 업데이트를 하고, 존재하지 않으면 새로운 객체를 생성한다.
     const newPost = await this.postRepository.save(post);
     return newPost;
@@ -56,7 +56,7 @@ export class PostsService {
       throw new NotFoundException("The post doesn't exist");
     }
 
-    const updatedPost: PostModel = {
+    const updatedPost: PostEntity = {
       id: post.id,
       author: updatePostDto.author || post.author,
       content: updatePostDto.content || post.content,
