@@ -34,11 +34,17 @@ export class PostsController {
 
   @Post()
   async createPost(@Body() createPostDto: CreatePostDto) {
-    return await this.postsService.createPost(createPostDto);
+    return await this.postsService.createPost(
+      createPostDto.content,
+      createPostDto.author
+    );
   }
 
   @Patch(':id')
-  async updatePost(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
+  async updatePost(
+    @Param('id') id: string,
+    @Body() updatePostDto: UpdatePostDto
+  ) {
     return await this.postsService.updatePost(+id, updatePostDto);
   }
 

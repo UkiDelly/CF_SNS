@@ -6,28 +6,29 @@ import { PostEntity } from './entities/posts.entity';
 export { CreatePostDto, UpdatePostDto };
 
 interface CreatePostDto {
-  author: string;
+  author: number;
   content: string;
 }
 
 interface UpdatePostDto {
-  author?: string;
   content?: string;
 }
 
 @Injectable()
 export class PostsService {
-
   constructor(
     // NestJS에서 자동으로 생성한 Repository를 주입할때는 @InjectRepository()도 사용해야한다.
     @InjectRepository(PostEntity)
-    private readonly postRepository: Repository<PostEntity>) {}
+    private readonly postRepository: Repository<PostEntity>
+  ) {}
 
   private posts: PostEntity[] = [];
 
-
   async getPosts() {
-    return await this.postRepository.find({ take: 10 });
+    return await this.postRepository.find({
+      take: 10,
+      relations: { author: true },
+    });
   }
 
   async getPost(id: number): Promise<PostEntity> {
@@ -39,9 +40,13 @@ export class PostsService {
     return post;
   }
 
-  async createPost(createPostDto: CreatePostDto) {
+  async createPost(content: string, authorId: number) {
     // 새로운 PostEntity 객체를 생성한다,
-    const post = this.postRepository.create(createPostDto);
+    // 이때 author는 authorId를 통해 UserEntity 객체를 참조한다.
+    const post = this.postRepository.create({
+      content,
+      author: { id: authorId },
+    });
 
     // 생성한 PostEntity 객체를 저장한다.
     // .save()함수는 객체가 존재하면 업데이트를 하고, 존재하지 않으면 새로운 객체를 생성한다.
@@ -57,12 +62,9 @@ export class PostsService {
     }
 
     const updatedPost: PostEntity = {
-      id: post.id,
-      author: updatePostDto.author || post.author,
-      content: updatePostDto.content || post.content,
-      likeCount: post.likeCount,
-      commentCount: post.commentCount,
-    }
+      ...post,
+      ...updatePostDto,
+    };
 
     await this.postRepository.update(updatedPost.id, updatedPost);
     return updatedPost;

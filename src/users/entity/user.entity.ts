@@ -1,8 +1,10 @@
 import { PostEntity } from 'src/posts/entities/posts.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-export enum Role { ADMIN = 'admin', USER = 'user' }
-
+export enum Role {
+  ADMIN = 'admin',
+  USER = 'user',
+}
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -19,8 +21,8 @@ export class UserEntity {
   password: string;
 
   @Column({ type: 'enum', enum: Role, default: Role.USER })
-  role: Role
+  role: Role;
 
-  @OneToMany(ref => PostEntity, post => post.author)
+  @OneToMany(() => PostEntity, (post) => post.author)
   posts: PostEntity[];
 }

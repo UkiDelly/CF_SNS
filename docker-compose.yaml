@@ -5,8 +5,8 @@ services:
     image: postgres:latest
     restart: always
     volumes:
-      - ./data:/var/lib/postgresql/data
-      - ./data/log:/var/log/postgresql
+      - ./db/data:/var/lib/postgresql/data
+      - ./db/log:/var/log/postgresql
     ports:
       - 5432:5432
     environment:
